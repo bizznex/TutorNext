@@ -26,6 +26,7 @@ Run this after deployment and after any beta-facing change.
 ## Backend QA
 
 - API service deploy succeeded
+- API health check `/healthz` returns `{"status":"ok"}`
 - Database service exists
 - `python manage.py migrate` completed
 - `python manage.py seed_demo` completed
@@ -102,4 +103,3 @@ Decision:
 
 - Ready for 3-5 guided beta users
 - Fix issues first
-

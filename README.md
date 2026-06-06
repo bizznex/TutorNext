@@ -121,6 +121,8 @@ See:
 
 [DEPLOYMENT_PRIVATE_BETA.md](DEPLOYMENT_PRIVATE_BETA.md)
 
+The backend exposes `/healthz` for hosted health checks. GitHub Actions runs frontend build and backend system checks on `main`.
+
 ## Current Status
 
 The product is ready for private deployment setup and guided beta preparation.

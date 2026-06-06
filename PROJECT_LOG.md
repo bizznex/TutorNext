@@ -13,6 +13,7 @@ Status:
 - Private beta safety controls are implemented.
 - Render deployment blueprint is prepared.
 - Beta review guide, feedback form, and QA checklist are prepared.
+- API health check endpoint and GitHub Actions CI are prepared.
 - Code is pushed to GitHub.
 - Actual hosted deployment still needs to be created in the Render account.
 
@@ -79,6 +80,7 @@ Current product focus:
 - Added Gunicorn.
 - Added `STATIC_ROOT`.
 - Added `render.yaml`.
+- Added backend `/healthz` endpoint for hosted health checks.
 - Added `DEPLOYMENT_PRIVATE_BETA.md`.
 - Updated root `README.md` with product clarity and impact.
 - Updated `prototype/README.md` with deployment links.
@@ -99,6 +101,7 @@ Current product focus:
 - `python manage.py collectstatic --dry-run --noinput` passed.
 - `python -m compileall prototype\backend\bizznexx_backend prototype\backend\businesses` passed.
 - Local UI responded at `http://localhost:5173`.
+- GitHub Actions CI workflow added for frontend build and backend checks.
 
 ## Pushed Commits
 
@@ -106,6 +109,7 @@ Current product focus:
 - `2f0e634` - Add private beta safety controls
 - `c2374da` - Prepare private beta deployment
 - `384fcd7` - Add product README and project log
+- `d962e3c` - Add beta review operations docs
 
 ## Left Before Private Beta Users
 
@@ -162,6 +166,8 @@ Create the Render Blueprint deployment from GitHub using `render.yaml`, then upd
 - API URL
 - Beta access code location
 - Whether seed data was created
+- API health check result
+- GitHub Actions CI result
 - First QA result
 
 After deployment, run `PRIVATE_BETA_QA_CHECKLIST.md` before sharing the beta URL.

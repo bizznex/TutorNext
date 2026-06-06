@@ -54,6 +54,7 @@ If Render changes the domains, update:
 Verify:
 
 - Frontend opens on HTTPS.
+- API health check returns OK at `/healthz`.
 - Access code gate appears if `VITE_BETA_ACCESS_CODE` is set.
 - API responds through the frontend.
 - Ananya Learning Studio appears.
@@ -62,6 +63,7 @@ Verify:
 - Message preview opens.
 - Payment status update works.
 - Beta terms page is visible.
+- GitHub Actions CI is passing on `main`.
 
 ## Current Limitations
 
