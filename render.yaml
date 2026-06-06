@@ -1,0 +1,47 @@
+databases:
+  - name: bizznexx-beta-db
+    plan: free
+    databaseName: bizznexx_beta
+    user: bizznexx_beta
+
+services:
+  - type: web
+    name: bizznexx-beta-api
+    runtime: python
+    plan: free
+    rootDir: prototype/backend
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: gunicorn bizznexx_backend.wsgi:application
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: bizznexx-beta-api.onrender.com
+      - key: CORS_ALLOW_ALL_ORIGINS
+        value: "False"
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://bizznexx-beta.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://bizznexx-beta.onrender.com
+      - key: BIZZNEXX_BETA_API_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bizznexx-beta-db
+          property: connectionString
+
+  - type: web
+    name: bizznexx-beta
+    runtime: static
+    rootDir: prototype/frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE
+        value: https://bizznexx-beta-api.onrender.com/api
+      - key: VITE_BETA_API_KEY
+        sync: false
+      - key: VITE_BETA_ACCESS_CODE
+        sync: false

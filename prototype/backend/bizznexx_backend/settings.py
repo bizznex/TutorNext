@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import dj_database_url
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -53,8 +54,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "bizznexx_backend.wsgi.application"
 
+DATABASE_URL = os.getenv("DATABASE_URL", "")
 DATABASES = {
-    "default": {
+    "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    if DATABASE_URL
+    else {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
@@ -66,6 +70,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = os.getenv("CORS_ALLOW_ALL_ORIGINS", str(DEBUG)).lower() == "true"

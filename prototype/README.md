@@ -96,6 +96,8 @@ Frontend:
 
 Local development remains open if these env vars are not set.
 
+For hosted deployment, use the root `render.yaml` and follow `../DEPLOYMENT_PRIVATE_BETA.md`.
+
 ## First Prototype Principle
 
 BizzNexx is not an accounting platform. It is a paid service and software layer that helps small service businesses present what they sell, capture inquiries, follow up, collect better, and understand what needs attention today.
