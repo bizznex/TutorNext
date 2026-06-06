@@ -63,8 +63,8 @@ class Command(BaseCommand):
         catalogue = Catalogue.objects.create(
             business=business,
             audience="For Class 8-12 students and parents in South Kolkata",
-            headline="Maths and Science coaching with trial classes, parent updates, and structured revision.",
-            subtext="Hybrid batches for CBSE, ICSE, and WB board students. Parents receive monthly progress notes and polite fee reminders.",
+            headline="Maths and Science support for Classes 8-12, with trial assessment and parent updates.",
+            subtext="Hybrid CBSE, ICSE, and WB board batches with structured revision, patient doubt clearing, and clear monthly fee reminders.",
             primary_cta="Book a trial class",
             is_published=True,
         )
@@ -72,9 +72,9 @@ class Command(BaseCommand):
             (
                 "Class 9-10 Maths Foundation",
                 "Group batch",
-                "Concept clarity, weekly practice, and exam-focused revision for Class 9-10 students.",
+                "Concept building, weekly practice, board-style sums, and revision support before school tests.",
                 "Rs. 2,500/month",
-                "Best for students who need steady board exam preparation and parent-visible progress.",
+                "Best for students who need stronger fundamentals before board-prep years.",
                 "Tue/Thu 6 PM, Sat 11 AM",
                 "Free 30-minute assessment before joining",
             ),
@@ -83,17 +83,17 @@ class Command(BaseCommand):
                 "Small group",
                 "Numericals, board preparation, doubt clearing, and chapter-wise revision plans.",
                 "Rs. 3,500/month",
-                "Best for senior students who need structured problem-solving support.",
+                "Designed for students who need personal attention beyond large coaching classes.",
                 "Mon/Wed 7 PM",
-                "Rs. 300 trial session adjusted on joining",
+                "Rs. 300 trial session",
             ),
             (
                 "One-to-One Doubt Class",
                 "1:1 session",
-                "Focused help for weak chapters before tests, boards, or school exams.",
+                "Focused support for weak chapters, upcoming tests, or exam-week confusion.",
                 "Rs. 800/session",
-                "Best for short-term targeted support.",
-                "Slots shared weekly",
+                "Parents can request a specific chapter or worksheet before the session.",
+                "Slots shared based on weekly availability",
                 "Pay per session",
             ),
         ]
@@ -111,23 +111,31 @@ class Command(BaseCommand):
             )
         for index, qa in enumerate(
             [
-                ("Do you offer trial classes?", "Yes. Maths has a free assessment and Physics has a paid trial adjusted on joining."),
-                ("How are parents updated?", "Parents receive a short monthly progress note and can request a quick call if needed."),
-                ("Are classes online or offline?", "Both options are available depending on batch and subject."),
+                ("Do you offer trial classes?", "Yes. Class 9-10 students can take a free 30-minute assessment. Class 11-12 Physics has a paid trial session."),
+                ("Which boards do you support?", "CBSE, ICSE, and WB board students are supported. The inquiry form asks for class and board so the right batch can be suggested."),
+                ("How are parents updated?", "Parents receive simple monthly progress notes and reminders for fees, trials, and revision plans."),
+                ("Can fees be discussed privately?", "Yes. Fees can be shown publicly, shared as a range, or discussed after the first trial depending on the tutor preference."),
             ]
         ):
             FAQ.objects.create(catalogue=catalogue, question=qa[0], answer=qa[1], display_order=index)
         for proof in [
-            "8 years teaching experience",
+            "8 years Maths and Science teaching experience",
             "120+ students taught",
             "2025 batch: 14 students scored 80+ in Maths/Science",
+            "Monthly parent progress notes and fee reminders",
         ]:
             TrustProof.objects.create(business=business, title=proof)
         Testimonial.objects.create(
             business=business,
-            customer_name="Parent of Class 10 student",
-            customer_context="ICSE Maths",
-            quote="My son's confidence improved before boards because concepts were explained patiently.",
+            customer_name="Parent of Class 10 ICSE student",
+            customer_context="Maths Foundation",
+            quote="My son became more confident before boards because concepts were explained patiently and revision was structured.",
+        )
+        Testimonial.objects.create(
+            business=business,
+            customer_name="Parent of Class 12 CBSE student",
+            customer_context="Physics Support",
+            quote="The small batch helped with numericals and doubts. We also got timely updates before tests.",
         )
         MediaAsset.objects.create(
             business=business,
@@ -146,7 +154,7 @@ class Command(BaseCommand):
             expected_value=2500,
             next_action="Send trial options and ask preferred timing",
             follow_up_age_days=1,
-            urgency_reason="Parent asked for trial; early response improves conversion.",
+            urgency_reason="Class 10 ICSE parent asked for trial options yesterday.",
         )
         Lead.objects.create(
             business=business,
@@ -158,7 +166,19 @@ class Command(BaseCommand):
             expected_value=3500,
             next_action="Send trial reminder before 7 PM session",
             follow_up_age_days=0,
-            urgency_reason="Trial scheduled today.",
+            urgency_reason="Trial is due today. Reminder should go before the 7 PM session.",
+        )
+        Lead.objects.create(
+            business=business,
+            name="Ayan parent",
+            phone_number="9830003333",
+            interested_service="Class 9-10 Maths Foundation",
+            source="WhatsApp referral",
+            status="Trial options sent",
+            expected_value=2500,
+            next_action="Follow up after parent asked for fee details",
+            follow_up_age_days=3,
+            urgency_reason="Parent has fee details but no trial slot is confirmed yet.",
         )
         Payment.objects.create(
             business=business,
@@ -167,7 +187,7 @@ class Command(BaseCommand):
             amount_due=2500,
             status="overdue",
             age_days=6,
-            urgency_reason="Monthly fee is 6 days overdue.",
+            urgency_reason="Monthly fee is 6 days overdue. Send a polite UPI reminder.",
             payment_mode="UPI",
         )
         Payment.objects.create(
@@ -178,7 +198,7 @@ class Command(BaseCommand):
             amount_paid=800,
             status="part_paid",
             age_days=2,
-            urgency_reason="Balance pending after two sessions.",
+            urgency_reason="Rs. 800 paid, balance is still pending after the second doubt class.",
             payment_mode="UPI",
         )
         ScoreReason.objects.create(

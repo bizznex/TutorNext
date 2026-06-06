@@ -1,13 +1,13 @@
 PERSONA_PACKS = {
     "tutor": {
         "label": "Tutor / Coach",
-        "statuses": ["New inquiry", "Contacted", "Trial scheduled", "Fee sent", "Enrolled", "Lost"],
+        "statuses": ["New inquiry", "Trial options sent", "Trial scheduled", "Trial completed", "Fee plan sent", "Enrolled", "Lost"],
         "first_status": "New inquiry",
         "first_action": "Send first response and offer trial options",
         "messages": {
-            "first_reply": "Hi {name}, thanks for your inquiry. I can help with {service}. Would you like to book a trial class this week?",
-            "follow_up": "Hi {name}, gentle follow-up on your interest in {service}. Should I reserve a trial slot for you?",
-            "payment": "Hi {name}, gentle reminder that Rs. {amount} is pending for {service}. Please share confirmation once paid.",
+            "first_reply": "Hi {name}, thanks for your inquiry. I can help with {service}. Please share the student class/board and preferred timing, and I will suggest a trial slot.",
+            "follow_up": "Hi {name}, gentle follow-up on your interest in {service}. Would you like me to reserve a trial slot this week?",
+            "payment": "Hi {name}, gentle reminder that Rs. {amount} is pending for {service}. Please share confirmation once paid. Thank you.",
         },
     },
     "event": {

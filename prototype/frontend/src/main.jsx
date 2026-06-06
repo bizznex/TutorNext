@@ -118,7 +118,14 @@ function App() {
     setView('today');
   }
 
-  const nav = operatorMode ? [...ownerViews, ...operatorViews] : ownerViews;
+  const learningStudioViews = selected.pack === 'tutor' ? [{ id: 'learningStudioBeta', label: 'Beta Studio', icon: BadgeCheck }] : [];
+  const nav = operatorMode ? [...learningStudioViews, ...ownerViews, ...operatorViews] : [...learningStudioViews, ...ownerViews];
+
+  useEffect(() => {
+    if (selected.pack !== 'tutor' && view === 'learningStudioBeta') {
+      setView('today');
+    }
+  }, [selected.pack, view]);
 
   return (
     <div className="workspace-shell">
@@ -152,6 +159,16 @@ function App() {
 
       <main className="main-panel">
         <WorkspaceHeader business={selected} />
+        {view === 'learningStudioBeta' && (
+          <LearningStudioBetaView
+            business={selected}
+            apiMode={apiMode}
+            refreshBusinesses={refreshBusinesses}
+            updateBusiness={updateBusiness}
+            onInquiry={createInquiry}
+            onDraft={setMessageDraft}
+          />
+        )}
         {view === 'today' && (
           <TodayView
             business={selected}
@@ -246,6 +263,217 @@ function WorkspaceHeader({ business }) {
         </a>
       </div>
     </header>
+  );
+}
+
+function LearningStudioBetaView({ business, apiMode, refreshBusinesses, updateBusiness, onInquiry, onDraft }) {
+  const [form, setForm] = useState(defaultInquiryForm(business));
+  const stats = getStats(business);
+  const pendingPayments = business.payments.filter((payment) => payment.status !== 'Paid');
+  const trialLeads = business.leads.filter((lead) =>
+    `${lead.status} ${lead.nextAction}`.toLowerCase().includes('trial'),
+  );
+  const priorityLeads = (trialLeads.length ? trialLeads : business.leads).slice(0, 4);
+
+  useEffect(() => {
+    setForm(defaultInquiryForm(business));
+  }, [business.id]);
+
+  function submit(event) {
+    event.preventDefault();
+    if (!form.name || !form.phone) return;
+    const selectedItem = business.catalogue.items.find((item) => String(item.id) === String(form.catalogueItemId));
+    onInquiry({
+      ...form,
+      service: selectedItem?.name || '',
+      source: 'Learning Studio beta page',
+      expectedAmount: parseAmount(selectedItem?.price),
+    });
+    setForm(defaultInquiryForm(business));
+  }
+
+  return (
+    <section className="studio-beta">
+      <div className="studio-beta-banner">
+        <div>
+          <p className="eyebrow">Parallel beta build</p>
+          <h2>Learning Studio experience for parent trust, trial follow-up, and monthly fee discipline.</h2>
+          <span>
+            This tab reuses the existing BizzNexx workflow while testing a sharper tutor-specific product surface.
+          </span>
+        </div>
+        <div className="studio-beta-stats">
+          <Metric icon={Users} label="Open parent inquiries" value={stats.openLeads} tone="yellow" />
+          <Metric icon={CreditCard} label="Pending fees" value={`Rs. ${stats.pendingAmount.toLocaleString('en-IN')}`} tone="rose" />
+        </div>
+      </div>
+
+      <div className="studio-beta-safety">
+        <BadgeCheck size={18} />
+        <span>
+          Beta note: this page uses demo-ready learning studio data. BizzNexx tracks inquiries, follow-ups, and fee
+          status only; it does not guarantee marks, admissions, lead volume, payment recovery, or legal compliance.
+        </span>
+      </div>
+
+      <div className="studio-parent-page">
+        <section className="studio-hero">
+          <div>
+            <p className="eyebrow">Parent-ready public page</p>
+            <h1>{business.catalogue.headline}</h1>
+            <p>{business.catalogue.subtext}</p>
+            <div className="public-actions">
+              <a
+                className="primary-button"
+                href={whatsAppHref(
+                  business,
+                  `Hi, I want to discuss a trial class at ${business.name}. Student class/board: `,
+                )}
+              >
+                <MessageCircle size={16} />
+                Ask on WhatsApp
+              </a>
+              <button className="ghost-button" onClick={() => navigator.clipboard?.writeText(publicUrl(business))}>
+                <Share2 size={16} />
+                Copy parent link
+              </button>
+            </div>
+          </div>
+          <aside className="teacher-card">
+            <span>Teacher profile</span>
+            <strong>{business.owner}</strong>
+            <p>
+              8 years of Maths and Science coaching for CBSE, ICSE, and WB board students, with patient doubt clearing
+              and monthly parent updates.
+            </p>
+          </aside>
+        </section>
+
+        <section className="studio-proof-grid">
+          {business.proof.map((item) => (
+            <div className="studio-proof" key={item}>
+              <BadgeCheck size={18} />
+              <span>{item}</span>
+            </div>
+          ))}
+        </section>
+
+        <section className="studio-section">
+          <SectionTitle eyebrow="Classes and fees" title="Choose the right support path" />
+          <div className="studio-course-grid">
+            {business.catalogue.items.map((item) => (
+              <article className="studio-course-card" key={item.id}>
+                <span>{item.format}</span>
+                <h3>{item.name}</h3>
+                <p>{item.description}</p>
+                {item.details && <small>{item.details}</small>}
+                {item.timingOrTimeline && <small>{item.timingOrTimeline}</small>}
+                {item.terms && <small>{item.terms}</small>}
+                <strong>{item.price}</strong>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="studio-section two-column">
+          <div>
+            <SectionTitle eyebrow="Trial inquiry" title="Capture parent context before WhatsApp" />
+            <form className="inquiry-form studio-inquiry" onSubmit={submit}>
+              <input
+                placeholder="Parent / student name"
+                value={form.name}
+                onChange={(event) => setForm({ ...form, name: event.target.value })}
+              />
+              <input
+                placeholder="Phone number"
+                value={form.phone}
+                onChange={(event) => setForm({ ...form, phone: event.target.value })}
+              />
+              <select
+                value={form.catalogueItemId}
+                onChange={(event) => setForm({ ...form, catalogueItemId: event.target.value })}
+              >
+                {business.catalogue.items.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+              <input
+                placeholder="Class and board, e.g. Class 10 ICSE"
+                value={form.detailOne}
+                onChange={(event) => setForm({ ...form, detailOne: event.target.value })}
+              />
+              <input
+                placeholder="Subject concern and preferred timing"
+                value={form.detailTwo}
+                onChange={(event) => setForm({ ...form, detailTwo: event.target.value })}
+              />
+              <textarea
+                placeholder="Anything the parent wants the teacher to know"
+                value={form.note}
+                onChange={(event) => setForm({ ...form, note: event.target.value })}
+              />
+              <button className="primary-button" type="submit">
+                <Send size={16} />
+                Send trial inquiry
+              </button>
+              <small>Parent details are used only to respond to this inquiry during beta validation.</small>
+            </form>
+          </div>
+
+          <div className="studio-process">
+            <SectionTitle eyebrow="What happens next" title="Simple, reassuring parent journey" />
+            {[
+              'Parent shares class, board, subject, and timing.',
+              'Ananya sends trial options on WhatsApp.',
+              'Trial reminder appears before the session.',
+              'Post-trial follow-up and fee plan are tracked.',
+            ].map((step, index) => (
+              <div className="studio-step" key={step}>
+                <strong>{index + 1}</strong>
+                <span>{step}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="studio-section two-column">
+          <Panel title="Parent-trial action queue">
+            <LeadActionList
+              business={business}
+              leads={priorityLeads}
+              apiMode={apiMode}
+              refreshBusinesses={refreshBusinesses}
+              updateBusiness={updateBusiness}
+              onDraft={onDraft}
+            />
+          </Panel>
+          <Panel title="Monthly fee actions">
+            <PaymentActionList
+              business={business}
+              payments={pendingPayments}
+              apiMode={apiMode}
+              refreshBusinesses={refreshBusinesses}
+              updateBusiness={updateBusiness}
+              onDraft={onDraft}
+            />
+          </Panel>
+        </section>
+
+        <section className="studio-section">
+          <SectionTitle eyebrow="Parent FAQ" title="Questions that reduce repeated explanation" />
+          <div className="faq-grid">
+            {business.catalogue.faqs.map((faq) => (
+              <article className="faq-card" key={faq.question || faq}>
+                <strong>{faq.question || faq}</strong>
+                {faq.answer && <p>{faq.answer}</p>}
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+    </section>
   );
 }
 

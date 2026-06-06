@@ -610,19 +610,235 @@ a {
   color: #1f2d2a;
 }
 
+.studio-beta {
+  display: grid;
+  gap: 18px;
+}
+
+.studio-beta-banner,
+.studio-beta-safety,
+.studio-parent-page,
+.teacher-card,
+.studio-course-card,
+.studio-proof,
+.studio-process,
+.faq-card {
+  border: 1px solid #e2dccf;
+  border-radius: 8px;
+  background: white;
+}
+
+.studio-beta-banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  gap: 18px;
+  align-items: center;
+  padding: 22px;
+  background: #fdf8eb;
+}
+
+.studio-beta-banner h2,
+.studio-hero h1,
+.studio-section h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.studio-beta-banner h2 {
+  max-width: 980px;
+  font-size: 26px;
+  line-height: 1.18;
+}
+
+.studio-beta-banner span,
+.teacher-card span,
+.studio-course-card span,
+.studio-course-card small,
+.studio-inquiry small,
+.studio-step span,
+.faq-card p {
+  color: #5d6965;
+}
+
+.studio-beta-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.studio-beta-safety {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #f8fbf8;
+  color: #2f4a42;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.studio-beta-safety svg {
+  flex: 0 0 auto;
+  color: #2d6a4f;
+  margin-top: 2px;
+}
+
+.studio-parent-page {
+  display: grid;
+  gap: 24px;
+  padding: 24px;
+}
+
+.studio-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.studio-hero h1 {
+  max-width: 900px;
+  font-size: 42px;
+  line-height: 1.08;
+}
+
+.studio-hero p {
+  max-width: 780px;
+  color: #3d4a46;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.teacher-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 18px;
+  background: #14342f;
+  color: #f7f1e4;
+}
+
+.teacher-card p {
+  margin: 0;
+  color: #f7f1e4;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.studio-proof-grid,
+.studio-course-grid,
+.faq-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.studio-proof-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.studio-proof {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 70px;
+  padding: 14px;
+  background: #fffaf0;
+}
+
+.studio-proof svg {
+  flex: 0 0 auto;
+  color: #2d6a4f;
+}
+
+.studio-section {
+  display: grid;
+  gap: 16px;
+}
+
+.studio-course-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.studio-course-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 16px;
+}
+
+.studio-course-card h3,
+.faq-card strong {
+  margin: 0;
+}
+
+.studio-course-card p,
+.faq-card p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.studio-course-card strong {
+  margin-top: 4px;
+  color: #14342f;
+}
+
+.studio-inquiry {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.studio-process {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 16px;
+}
+
+.studio-step {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.studio-step strong {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #f0c36d;
+  color: #14342f;
+}
+
+.faq-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.faq-card {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
 @media (max-width: 980px) {
   .app-shell,
   .workspace-shell,
   .workspace-header,
   .hero-band,
   .two-column,
-  .public-layout {
+  .public-layout,
+  .studio-beta-banner,
+  .studio-hero {
     grid-template-columns: 1fr;
   }
 
   .metric-grid,
   .service-grid,
-  .proof-strip {
+  .proof-strip,
+  .studio-proof-grid,
+  .studio-course-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -652,6 +868,9 @@ a {
     .case-grid,
     .testimonial-grid,
     .faq-grid,
+    .studio-proof-grid,
+    .studio-course-grid,
+    .studio-beta-stats,
     .reason-grid,
     .message-grid,
     .mobile-card {
@@ -659,7 +878,8 @@ a {
   }
 
   .hero-band h2,
-  .public-hero h1 {
+  .public-hero h1,
+  .studio-hero h1 {
     font-size: 24px;
   }
 

@@ -1,15 +1,15 @@
 export const personaPacks = {
   tutor: {
     label: 'Tutor / Coach',
-    statuses: ['New inquiry', 'Contacted', 'Trial scheduled', 'Fee sent', 'Enrolled', 'Lost'],
+    statuses: ['New inquiry', 'Trial options sent', 'Trial scheduled', 'Trial completed', 'Fee plan sent', 'Enrolled', 'Lost'],
     inquiryFields: ['studentClass', 'preferredTime'],
     messages: {
       firstReply:
-        'Hi {name}, thanks for your inquiry. I can help with {service}. Would you like to book a trial class this week?',
+        'Hi {name}, thanks for your inquiry. I can help with {service}. Please share the student class/board and preferred timing, and I will suggest a trial slot.',
       followUp:
-        'Hi {name}, gentle follow-up on your interest in {service}. Should I reserve a trial slot for you?',
+        'Hi {name}, gentle follow-up on your interest in {service}. Would you like me to reserve a trial slot this week?',
       payment:
-        'Hi {name}, gentle reminder that Rs. {amount} is pending for {service}. Please share confirmation once paid.',
+        'Hi {name}, gentle reminder that Rs. {amount} is pending for {service}. Please share confirmation once paid. Thank you.',
     },
   },
   event: {
@@ -54,10 +54,10 @@ export const starterBusinesses = [
     growthScore: 74,
     healthScore: 68,
     catalogue: {
-      audience: 'For Class 8-12 students and parents',
-      headline: 'Maths and Science coaching with trial classes and monthly parent updates.',
+      audience: 'For Class 8-12 students and parents in South Kolkata',
+      headline: 'Maths and Science support for Classes 8-12, with trial assessment and parent updates.',
       subtext:
-        'Online and offline batches for CBSE, ICSE, and WB board students. Book a trial before joining.',
+        'Hybrid CBSE, ICSE, and WB board batches with structured revision, patient doubt clearing, and clear monthly fee reminders.',
       cta: 'Book trial class',
       items: [
         {
@@ -65,29 +65,68 @@ export const starterBusinesses = [
           name: 'Class 9-10 Maths Foundation',
           format: 'Group batch',
           price: 'Rs. 2,500/month',
-          description: 'Concept building, weekly practice, and parent progress updates.',
+          description: 'Concept building, weekly practice, board-style sums, and revision support before school tests.',
+          details: 'Best for students who need stronger fundamentals before board-prep years.',
+          timingOrTimeline: 'Tue/Thu 6 PM, Sat 11 AM',
+          terms: 'Free 30-minute assessment before joining',
         },
         {
           id: 'svc_physics',
           name: 'Class 11-12 Physics Support',
           format: 'Small group',
           price: 'Rs. 3,500/month',
-          description: 'Numericals, board preparation, doubt clearing, and revision plans.',
+          description: 'Numericals, board preparation, doubt clearing, and chapter-wise revision plans.',
+          details: 'Designed for students who need personal attention beyond large coaching classes.',
+          timingOrTimeline: 'Mon/Wed 7 PM',
+          terms: 'Rs. 300 trial session',
         },
         {
           id: 'svc_doubt',
           name: 'One-to-One Doubt Class',
           format: '1:1 session',
           price: 'Rs. 800/session',
-          description: 'Focused support for weak chapters before exams or tests.',
+          description: 'Focused support for weak chapters, upcoming tests, or exam-week confusion.',
+          details: 'Parents can request a specific chapter or worksheet before the session.',
+          timingOrTimeline: 'Slots shared based on weekly availability',
+          terms: 'Pay per session',
         },
       ],
-      faqs: ['Do you offer trial classes?', 'Are classes online or offline?', 'How are parents updated?'],
+      faqs: [
+        {
+          question: 'Do you offer trial classes?',
+          answer: 'Yes. Class 9-10 students can take a free 30-minute assessment. Class 11-12 Physics has a paid trial session.',
+        },
+        {
+          question: 'Which boards do you support?',
+          answer: 'CBSE, ICSE, and WB board students are supported. The inquiry form asks for class and board so the right batch can be suggested.',
+        },
+        {
+          question: 'How are parents updated?',
+          answer: 'Parents receive simple monthly progress notes and reminders for fees, trials, and revision plans.',
+        },
+        {
+          question: 'Can fees be discussed privately?',
+          answer: 'Yes. Fees can be shown publicly, shared as a range, or discussed after the first trial depending on the tutor preference.',
+        },
+      ],
     },
     proof: [
-      '8 years teaching experience',
+      '8 years Maths and Science teaching experience',
       '120+ students taught',
-      'Monthly parent progress notes',
+      '2025 batch: 14 students scored 80+ in Maths/Science',
+      'Monthly parent progress notes and fee reminders',
+    ],
+    testimonials: [
+      {
+        customerName: 'Parent of Class 10 ICSE student',
+        customerContext: 'Maths Foundation',
+        quote: 'My son became more confident before boards because concepts were explained patiently and revision was structured.',
+      },
+      {
+        customerName: 'Parent of Class 12 CBSE student',
+        customerContext: 'Physics Support',
+        quote: 'The small batch helped with numericals and doubts. We also got timely updates before tests.',
+      },
     ],
     leads: [
       {
@@ -99,6 +138,8 @@ export const starterBusinesses = [
         status: 'New inquiry',
         nextAction: 'Send first response and trial class options',
         amount: 2500,
+        followUpAgeDays: 1,
+        urgencyReason: 'Class 10 ICSE parent asked for trial options yesterday.',
       },
       {
         id: 'lead_2',
@@ -109,12 +150,42 @@ export const starterBusinesses = [
         status: 'Trial scheduled',
         nextAction: 'Send trial reminder at 4 PM',
         amount: 3500,
+        followUpAgeDays: 0,
+        urgencyReason: 'Trial is due today. Reminder should go before the 7 PM session.',
+      },
+      {
+        id: 'lead_5',
+        name: 'Ayan parent',
+        phone: '9830003333',
+        service: 'Class 9-10 Maths Foundation',
+        source: 'WhatsApp referral',
+        status: 'Trial options sent',
+        nextAction: 'Follow up after parent asked for fee details',
+        amount: 2500,
+        followUpAgeDays: 3,
+        urgencyReason: 'Parent has fee details but no trial slot is confirmed yet.',
       },
     ],
     payments: [
-      { id: 'pay_1', name: 'Aarav', service: 'Class 9 Maths', amount: 2500, status: 'Overdue' },
-      { id: 'pay_2', name: 'Sohini', service: 'Doubt Class', amount: 1600, status: 'Part paid' },
-      { id: 'pay_3', name: 'Naina', service: 'Maths Foundation', amount: 2500, status: 'Paid' },
+      {
+        id: 'pay_1',
+        name: 'Aarav',
+        service: 'Class 9 Maths',
+        amount: 2500,
+        status: 'Overdue',
+        ageDays: 6,
+        urgencyReason: 'Monthly fee is 6 days overdue. Send a polite UPI reminder.',
+      },
+      {
+        id: 'pay_2',
+        name: 'Sohini',
+        service: 'Doubt Class',
+        amount: 1600,
+        status: 'Part paid',
+        ageDays: 2,
+        urgencyReason: 'Rs. 800 paid, balance is still pending after the second doubt class.',
+      },
+      { id: 'pay_3', name: 'Naina', service: 'Maths Foundation', amount: 2500, status: 'Paid', ageDays: 0 },
     ],
   },
   {
