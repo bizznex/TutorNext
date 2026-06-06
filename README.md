@@ -81,6 +81,9 @@ The product promise is smaller and sharper: help a service business present, cap
 - `render.yaml`: Render private beta deployment blueprint
 - `DEPLOYMENT_PRIVATE_BETA.md`: deployment instructions
 - `PROJECT_LOG.md`: living record of what is done, what is left, and what is next
+- `BETA_USER_REVIEW_GUIDE.md`: guided review script for selected tutor beta users
+- `BETA_FEEDBACK_FORM.md`: structured feedback form for beta calls
+- `PRIVATE_BETA_QA_CHECKLIST.md`: hosted deployment QA checklist
 - `Learning_Studio_*.md`: research, strategy, execution, and rollout planning for the Learning Studio wedge
 
 ## Run Locally
@@ -124,3 +127,12 @@ The product is ready for private deployment setup and guided beta preparation.
 
 It is not yet ready for broad public launch. Remaining work includes real authentication, reviewed legal documents, formal data deletion workflow, monitoring, backups, staging/production separation, and end-to-end tests.
 
+## Beta Operations
+
+Before inviting users:
+
+1. Deploy using `DEPLOYMENT_PRIVATE_BETA.md`.
+2. Run `PRIVATE_BETA_QA_CHECKLIST.md`.
+3. Use `BETA_USER_REVIEW_GUIDE.md` for each guided session.
+4. Capture responses in `BETA_FEEDBACK_FORM.md`.
+5. Update `PROJECT_LOG.md` after every meaningful beta milestone.

@@ -12,6 +12,7 @@ Status:
 - Parallel Learning Studio beta UI is built.
 - Private beta safety controls are implemented.
 - Render deployment blueprint is prepared.
+- Beta review guide, feedback form, and QA checklist are prepared.
 - Code is pushed to GitHub.
 - Actual hosted deployment still needs to be created in the Render account.
 
@@ -82,6 +83,15 @@ Current product focus:
 - Updated root `README.md` with product clarity and impact.
 - Updated `prototype/README.md` with deployment links.
 
+### Beta Operations
+
+- Added `BETA_USER_REVIEW_GUIDE.md`.
+- Added `BETA_FEEDBACK_FORM.md`.
+- Added `PRIVATE_BETA_QA_CHECKLIST.md`.
+- Defined guided demo flow for tutor reviews.
+- Defined reviewer scoring and willingness-to-pay questions.
+- Defined hosted deployment QA checks.
+
 ### Verification
 
 - `npm run build` passed.
@@ -95,6 +105,7 @@ Current product focus:
 - `6eeaa96` - Add Learning Studio beta strategy and parallel UI
 - `2f0e634` - Add private beta safety controls
 - `c2374da` - Prepare private beta deployment
+- `384fcd7` - Add product README and project log
 
 ## Left Before Private Beta Users
 
@@ -124,8 +135,8 @@ Current product focus:
 
 ### Beta Operations
 
-- Prepare guided demo script.
-- Prepare feedback form.
+- Use `BETA_USER_REVIEW_GUIDE.md` during tutor review calls.
+- Use `BETA_FEEDBACK_FORM.md` for every reviewer.
 - Recruit 3-5 tutor beta reviewers.
 - Share beta URL and access code.
 - Collect willingness-to-pay signal.
@@ -153,3 +164,4 @@ Create the Render Blueprint deployment from GitHub using `render.yaml`, then upd
 - Whether seed data was created
 - First QA result
 
+After deployment, run `PRIVATE_BETA_QA_CHECKLIST.md` before sharing the beta URL.
