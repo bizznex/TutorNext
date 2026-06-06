@@ -76,6 +76,26 @@ This MVP is ready for guided feedback demos with selected users on a local or pr
 - Admin access control
 - Data deletion process
 
+## Private Beta Controls
+
+The prototype now includes lightweight private-beta controls. They are not a replacement for production authentication, but they reduce accidental exposure during selected-user validation.
+
+Backend:
+
+- Copy `backend/.env.example` to `backend/.env`.
+- Set `DJANGO_DEBUG=False` for deployment.
+- Set `DJANGO_ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, and `CSRF_TRUSTED_ORIGINS`.
+- Set `BIZZNEXX_BETA_API_KEY` to require `X-BizzNexx-Beta-Key` on API calls.
+
+Frontend:
+
+- Copy `frontend/.env.example` to `frontend/.env`.
+- Set `VITE_API_BASE` to the deployed API URL.
+- Set `VITE_BETA_API_KEY` to match the backend key.
+- Set `VITE_BETA_ACCESS_CODE` to show an access-code gate for invited reviewers.
+
+Local development remains open if these env vars are not set.
+
 ## First Prototype Principle
 
 BizzNexx is not an accounting platform. It is a paid service and software layer that helps small service businesses present what they sell, capture inquiries, follow up, collect better, and understand what needs attention today.

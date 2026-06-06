@@ -1,9 +1,11 @@
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api';
+const BETA_API_KEY = import.meta.env.VITE_BETA_API_KEY || '';
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      ...(BETA_API_KEY ? { 'X-BizzNexx-Beta-Key': BETA_API_KEY } : {}),
       ...(options.headers || {}),
     },
     ...options,

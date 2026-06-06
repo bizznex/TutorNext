@@ -23,6 +23,7 @@ import { personaPacks, starterBusinesses } from './sampleData';
 import './styles.css';
 
 const STORAGE_KEY = 'bizznexx_workspace_v1';
+const BETA_ACCESS_CODE = import.meta.env.VITE_BETA_ACCESS_CODE || '';
 
 const ownerViews = [
   { id: 'today', label: 'Today', icon: CalendarClock },
@@ -31,6 +32,7 @@ const ownerViews = [
   { id: 'catalogue', label: 'Catalogue', icon: Globe2 },
   { id: 'messages', label: 'Messages', icon: MessageCircle },
   { id: 'insights', label: 'Insights', icon: BarChart3 },
+  { id: 'legal', label: 'Beta terms', icon: ClipboardList },
 ];
 
 const operatorViews = [{ id: 'setup', label: 'Setup', icon: Settings }];
@@ -42,10 +44,17 @@ function App() {
   const [operatorMode, setOperatorMode] = useState(false);
   const [apiMode, setApiMode] = useState('loading');
   const [messageDraft, setMessageDraft] = useState(null);
+  const [hasBetaAccess, setHasBetaAccess] = useState(
+    () => !BETA_ACCESS_CODE || sessionStorage.getItem('bizznexx_beta_access') === 'granted',
+  );
 
   const selected = ensureBusinessDefaults(
     businesses.find((business) => business.id === selectedId) || businesses[0] || starterBusinesses[0],
   );
+
+  if (!hasBetaAccess) {
+    return <BetaAccessGate onGrant={() => setHasBetaAccess(true)} />;
+  }
 
   async function refreshBusinesses(preferredId = selectedId) {
     try {
@@ -199,6 +208,7 @@ function App() {
         {view === 'catalogue' && <CatalogueWorkspace business={selected} onInquiry={createInquiry} />}
         {view === 'messages' && <MessagesView business={selected} />}
         {view === 'insights' && <InsightsView business={selected} />}
+        {view === 'legal' && <LegalView />}
         {view === 'setup' && operatorMode && (
           <OperatorSetup
             business={selected}
@@ -224,6 +234,56 @@ function Brand() {
         <span>Business workspace</span>
       </div>
     </div>
+  );
+}
+
+function BetaAccessGate({ onGrant }) {
+  const [code, setCode] = useState('');
+  const [error, setError] = useState('');
+
+  function submit(event) {
+    event.preventDefault();
+    if (code.trim() === BETA_ACCESS_CODE) {
+      sessionStorage.setItem('bizznexx_beta_access', 'granted');
+      onGrant();
+      return;
+    }
+    setError('This beta workspace needs the access code shared with selected users.');
+  }
+
+  return (
+    <main className="access-gate">
+      <section className="access-card">
+        <div className="brand-lockup">
+          <div className="brand-mark">BN</div>
+          <div>
+            <strong>BizzNexx</strong>
+            <span>Private beta workspace</span>
+          </div>
+        </div>
+        <div>
+          <p className="eyebrow">Selected beta</p>
+          <h1>Enter your access code</h1>
+          <p>
+            This workspace is for invited beta reviewers. Please do not enter real parent or student data unless a
+            beta agreement is in place.
+          </p>
+        </div>
+        <form onSubmit={submit}>
+          <input
+            autoFocus
+            placeholder="Access code"
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            type="password"
+          />
+          {error && <small>{error}</small>}
+          <button className="primary-button" type="submit">
+            Continue
+          </button>
+        </form>
+      </section>
+    </main>
   );
 }
 
@@ -473,6 +533,75 @@ function LearningStudioBetaView({ business, apiMode, refreshBusinesses, updateBu
           </div>
         </section>
       </div>
+    </section>
+  );
+}
+
+function LegalView() {
+  return (
+    <section className="page-stack">
+      <div className="hero-band">
+        <div>
+          <p className="eyebrow">Private beta readiness</p>
+          <h2>Privacy, consent, and honest-scope notes for selected beta users.</h2>
+          <span>
+            This is a lightweight beta notice for validation. It is not a substitute for final legal review before
+            public launch.
+          </span>
+        </div>
+      </div>
+
+      <div className="two-column">
+        <Panel title="Privacy baseline">
+          <div className="legal-list">
+            <p>
+              BizzNexx uses parent inquiry details only to help the selected business respond, follow up, and validate
+              the product workflow during beta.
+            </p>
+            <p>
+              Avoid entering sensitive student details. For beta testing, class, board, subject, timing preference, and
+              contact information are enough.
+            </p>
+            <p>
+              Beta users can ask for test records to be deleted. Before public rollout, this process should become a
+              formal in-product request path.
+            </p>
+          </div>
+        </Panel>
+
+        <Panel title="Beta terms">
+          <div className="legal-list">
+            <p>
+              BizzNexx tracks inquiries, follow-ups, message drafts, and fee status. It does not process payments,
+              recover money, file taxes, provide legal advice, or guarantee new leads.
+            </p>
+            <p>
+              Learning outcomes, marks, admissions, and rankings must not be guaranteed in page copy or beta
+              conversations.
+            </p>
+            <p>
+              Synthetic demo content is for validation only and should not be used as public market proof.
+            </p>
+          </div>
+        </Panel>
+      </div>
+
+      <Panel title="Pre-public launch gaps">
+        <div className="checklist">
+          {[
+            ['Replace beta notice with reviewed privacy policy and terms.', false],
+            ['Add production authentication for owner/operator views.', false],
+            ['Add formal data deletion request workflow.', false],
+            ['Deploy with HTTPS, DEBUG=False, restricted CORS, and env secrets.', false],
+          ].map(([label, status]) => (
+            <div key={label}>
+              <CheckCircle2 size={16} />
+              <span>{label}</span>
+              <strong>{status ? 'Ready' : 'Needed before public launch'}</strong>
+            </div>
+          ))}
+        </div>
+      </Panel>
     </section>
   );
 }
@@ -745,7 +874,10 @@ function PublicPagePreview({ business, onInquiry }) {
           <Plus size={16} />
           Create lead
         </button>
-        <span className="form-note">BizzNexx creates a lead, suggests the next WhatsApp reply, and adds follow-up to the owner dashboard.</span>
+        <span className="form-note">
+          BizzNexx creates a lead, suggests the next WhatsApp reply, and adds follow-up to the owner dashboard. During
+          beta, inquiry details should be used only to respond to this request and validate the workflow.
+        </span>
       </form>
     </section>
   );
