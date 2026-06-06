@@ -22,7 +22,18 @@ from businesses.personas import PERSONA_PACKS
 class Command(BaseCommand):
     help = "Seed realistic BizzNexx pilot data."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--skip-if-exists",
+            action="store_true",
+            help="Do not reseed if any businesses already exist.",
+        )
+
     def handle(self, *args, **options):
+        if options["skip_if_exists"] and Business.objects.exists():
+            self.stdout.write(self.style.WARNING("Demo data already exists. Skipping seed."))
+            return
+
         Business.objects.all().delete()
 
         self.seed_tutor()

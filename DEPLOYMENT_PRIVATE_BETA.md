@@ -27,13 +27,13 @@ The repository includes a Render blueprint in `render.yaml`.
 
 ## First Data Seed
 
-After the API deploy succeeds, open the Render shell for `bizznexx-beta-api` and run:
+The backend build command runs:
 
 ```bash
-python manage.py seed_demo
+python manage.py seed_demo --skip-if-exists
 ```
 
-This creates the Ananya Learning Studio, Ria Bridal Studio, and Northstar Design Co. demo records in the production beta database.
+This creates the Ananya Learning Studio, Ria Bridal Studio, and Northstar Design Co. demo records automatically when the beta database is empty. It skips seeding if demo/business data already exists, so future deploys do not wipe beta records.
 
 ## Expected URLs
 
@@ -57,6 +57,7 @@ Verify:
 - API health check returns OK at `/healthz`.
 - Access code gate appears if `VITE_BETA_ACCESS_CODE` is set.
 - API responds through the frontend.
+- Demo businesses appear without manually running Render Shell seed commands.
 - Ananya Learning Studio appears.
 - Beta Studio tab opens.
 - Trial inquiry creates a lead.

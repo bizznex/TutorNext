@@ -15,6 +15,7 @@ Status:
 - Beta review guide, feedback form, and QA checklist are prepared.
 - API health check endpoint and GitHub Actions CI are prepared.
 - GitHub Pages frontend preview workflow is prepared as the no-new-cloud-account fallback.
+- Render backend deploy now auto-seeds demo data when the database is empty.
 - Code is pushed to GitHub.
 - Actual hosted deployment still needs to be created in the Render account.
 
@@ -82,6 +83,7 @@ Current product focus:
 - Added `STATIC_ROOT`.
 - Added `render.yaml`.
 - Added backend `/healthz` endpoint for hosted health checks.
+- Updated Render backend build command to run `seed_demo --skip-if-exists`.
 - Added `DEPLOYMENT_PRIVATE_BETA.md`.
 - Added GitHub Pages frontend preview workflow.
 - Added `GITHUB_PAGES_BETA_PREVIEW.md`.
@@ -114,6 +116,7 @@ Current product focus:
 - `384fcd7` - Add product README and project log
 - `d962e3c` - Add beta review operations docs
 - `422dbc5` - Add deployment health checks and CI
+- `2e240b1` - Add GitHub Pages beta preview
 
 ## Left Before Private Beta Users
 
@@ -127,7 +130,7 @@ Current product focus:
 - Copy backend `BIZZNEXX_BETA_API_KEY` to frontend `VITE_BETA_API_KEY`.
 - Set frontend `VITE_BETA_ACCESS_CODE`.
 - Redeploy frontend.
-- Run `python manage.py seed_demo` in Render API shell.
+- Confirm backend auto-seeded demo data during deploy.
 
 ### Post-Deploy QA
 
