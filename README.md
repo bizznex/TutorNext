@@ -79,6 +79,7 @@ The product promise is smaller and sharper: help a service business present, cap
 - `prototype/frontend`: React + Vite owner/operator UI
 - `prototype/backend`: Django + DRF API
 - `render.yaml`: Render private beta deployment blueprint
+- `GITHUB_PAGES_BETA_PREVIEW.md`: no-new-cloud-account frontend preview path
 - `DEPLOYMENT_PRIVATE_BETA.md`: deployment instructions
 - `PROJECT_LOG.md`: living record of what is done, what is left, and what is next
 - `BETA_USER_REVIEW_GUIDE.md`: guided review script for selected tutor beta users
@@ -122,6 +123,16 @@ See:
 [DEPLOYMENT_PRIVATE_BETA.md](DEPLOYMENT_PRIVATE_BETA.md)
 
 The backend exposes `/healthz` for hosted health checks. GitHub Actions runs frontend build and backend system checks on `main`.
+
+## Fast UI Preview Without Backend Hosting
+
+If Render or another backend host is not available yet, use GitHub Pages for a frontend-only beta preview.
+
+See:
+
+[GITHUB_PAGES_BETA_PREVIEW.md](GITHUB_PAGES_BETA_PREVIEW.md)
+
+This preview is useful for UI review and guided calls. It uses browser-local fallback data and should not collect real parent/student data.
 
 ## Current Status
 

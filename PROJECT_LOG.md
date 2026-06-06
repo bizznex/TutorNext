@@ -14,6 +14,7 @@ Status:
 - Render deployment blueprint is prepared.
 - Beta review guide, feedback form, and QA checklist are prepared.
 - API health check endpoint and GitHub Actions CI are prepared.
+- GitHub Pages frontend preview workflow is prepared as the no-new-cloud-account fallback.
 - Code is pushed to GitHub.
 - Actual hosted deployment still needs to be created in the Render account.
 
@@ -82,6 +83,8 @@ Current product focus:
 - Added `render.yaml`.
 - Added backend `/healthz` endpoint for hosted health checks.
 - Added `DEPLOYMENT_PRIVATE_BETA.md`.
+- Added GitHub Pages frontend preview workflow.
+- Added `GITHUB_PAGES_BETA_PREVIEW.md`.
 - Updated root `README.md` with product clarity and impact.
 - Updated `prototype/README.md` with deployment links.
 
@@ -110,6 +113,7 @@ Current product focus:
 - `c2374da` - Prepare private beta deployment
 - `384fcd7` - Add product README and project log
 - `d962e3c` - Add beta review operations docs
+- `422dbc5` - Add deployment health checks and CI
 
 ## Left Before Private Beta Users
 
@@ -159,6 +163,14 @@ Current product focus:
 - Multi-tenant permissions
 
 ## Next Recommended Action
+
+Immediate no-new-account path:
+
+- Enable GitHub Pages with source set to GitHub Actions.
+- Run the `Deploy Frontend Preview to GitHub Pages` workflow.
+- Use the GitHub Pages URL for UI-only guided review.
+
+Full API-backed path:
 
 Create the Render Blueprint deployment from GitHub using `render.yaml`, then update this log with:
 
