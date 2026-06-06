@@ -1,6 +1,10 @@
 # BizzNexx Prototype
 
-This is the first feedback MVP for BizzNexx: a catalogue-to-lead-to-cash growth system for small service businesses.
+BizzNexx is a persona-first operating layer for Indian service-led microbusinesses.
+
+This prototype proves the first product loop: a business presents a credible page, captures structured inquiries, follows up through WhatsApp, tracks pending payments, and knows what needs attention today.
+
+The current beta focus is **Learning Studio**: tutors and small coaching businesses that need parent trust, trial follow-up, and monthly fee discipline without becoming CRM users.
 
 The goal is to show the product feel before building the full platform:
 
@@ -14,6 +18,28 @@ The goal is to show the product feel before building the full platform:
 - Segment-specific message suggestions
 - BizzNexx Growth Score and Health Score
 - PWA install basics
+
+## Product Essence
+
+BizzNexx is not a generic website builder, CRM, accounting app, or LMS.
+
+It is a paid service and software layer that helps small businesses:
+
+- Look trustworthy to prospects
+- Reduce repeated WhatsApp explanations
+- Capture better lead context
+- Act on today's follow-ups
+- Track fee/payment status without owning payment settlement
+- Improve operational discipline through assisted setup
+
+For Learning Studio, that means:
+
+- A parent-ready page
+- Trial inquiry capture
+- Teacher credibility and proof
+- Parent-friendly message templates
+- Trial and post-trial action queue
+- Monthly fee reminders
 
 ## Structure
 
