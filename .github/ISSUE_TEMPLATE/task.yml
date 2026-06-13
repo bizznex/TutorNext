@@ -1,0 +1,64 @@
+name: Product Task
+description: Track a ContexureEarth Tutor product, engineering, research, or GTM task.
+title: "[TASK-ID] Short task title"
+labels: ["contexureearth", "tutor"]
+body:
+  - type: input
+    id: task_id
+    attributes:
+      label: Task ID
+      description: Use the planner/tasklist ID, for example C-001, D-001, IMD-007.
+      placeholder: C-001
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0
+        - P1
+        - P2
+        - P3
+    validations:
+      required: true
+  - type: input
+    id: phase
+    attributes:
+      label: Phase
+      placeholder: P0 Foundation & Product Definition
+  - type: input
+    id: workstream
+    attributes:
+      label: Workstream
+      placeholder: Frontend Engineering
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What has to be done and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: What must be true before this task can be marked done.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation Signal
+      description: What evidence proves the task created product value.
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: List upstream task IDs or external dependencies.
+  - type: input
+    id: vision_link
+    attributes:
+      label: Vision Link
+      placeholder: V1/V7
+
