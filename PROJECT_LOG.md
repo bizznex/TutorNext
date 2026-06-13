@@ -4,7 +4,7 @@ This is the living execution log for BizzNexx. Update it whenever a meaningful p
 
 ## Current Snapshot
 
-Date: 2026-06-06
+Date: 2026-06-13
 
 Status:
 
@@ -18,12 +18,17 @@ Status:
 - Render backend deploy now auto-seeds demo data when the database is empty.
 - Code is pushed to GitHub.
 - Actual hosted deployment still needs to be created in the Render account.
+- Production feature strategy, persona heatmap, and feature ranking have been created.
+- Production accountable tasklist has been created.
+- Team handoff entry point has been created.
+- Selected MVP feature spine is locked for the next productionization phase.
 
 Current product focus:
 
 - Persona: Learning Studio / Tutor / Coach
 - Demo anchor: Ananya Learning Studio
 - Beta objective: validate whether tutors value a parent-ready page plus inquiry, trial, follow-up, and monthly fee workflow.
+- Production objective: build a responsive mobile/browser web app around Public Trust Page, Structured Inquiry Form, WhatsApp Handoff/Templates, Trial/Demo Workflow, Student/Learner Memory, Monthly Fee Tracker, Owner Action Queue, Testimonials/Proof, Parent/Client FAQ, and Privacy/Consent Controls.
 
 ## Done
 
@@ -99,6 +104,18 @@ Current product focus:
 - Defined reviewer scoring and willingness-to-pay questions.
 - Defined hosted deployment QA checks.
 
+### Production Planning and Handoff
+
+- Added `Learning_Studio_Tutor_Growth_Feature_CMD_Tracker.md`.
+- Added `Learning_Studio_Tutor_Growth_Feature_CMD_Tracker.docx`.
+- Added persona mapping and selected MVP feature heatmap.
+- Added feature ranking model and top build order.
+- Added `Learning_Studio_Production_Web_App_Accountable_Tasklist.md`.
+- Added external integration workstreams for WhatsApp, Instagram, YouTube, LinkedIn, Google Forms, and Google Sheets.
+- Added accountable workstreams for product, UX, frontend, backend, auth/privacy, analytics, QA, infrastructure, operator setup, support, GTM, and risk.
+- Added `TEAM_HANDOFF_START_HERE.md` as the current team entry point.
+- Updated `README.md` to point production work toward the handoff and accountable tasklist.
+
 ### Verification
 
 - `npm run build` passed.
@@ -164,8 +181,26 @@ Current product focus:
 - End-to-end tests
 - Public onboarding
 - Multi-tenant permissions
+- Production tenant/account model
+- Production auth decision
+- Staging environment
+- Production monitoring
+- Production backup restore test
+- Integration fallbacks beyond manual WhatsApp handoff
 
 ## Next Recommended Action
+
+Productionization path:
+
+- Start from `TEAM_HANDOFF_START_HERE.md`.
+- Use `Learning_Studio_Production_Web_App_Accountable_Tasklist.md` as the working task board.
+- First parallel tasks:
+  - `C-001`: Audit current frontend architecture.
+  - `D-001`: Audit current backend models/APIs.
+- Then lock:
+  - `D-002`: Tenant/account model.
+  - `E-001`: Auth approach.
+  - `N-001`: Production hosting architecture.
 
 Immediate no-new-account path:
 

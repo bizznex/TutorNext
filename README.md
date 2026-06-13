@@ -79,6 +79,9 @@ The product promise is smaller and sharper: help a service business present, cap
 - `prototype/frontend`: React + Vite owner/operator UI
 - `prototype/backend`: Django + DRF API
 - `render.yaml`: Render private beta deployment blueprint
+- `TEAM_HANDOFF_START_HERE.md`: current team entry point for productionizing Learning Studio
+- `Learning_Studio_Production_Web_App_Accountable_Tasklist.md`: accountable production workstreams and task board
+- `Learning_Studio_Tutor_Growth_Feature_CMD_Tracker.md`: feature strategy, persona heatmap, ranking, and MVP spine
 - `GITHUB_PAGES_BETA_PREVIEW.md`: no-new-cloud-account frontend preview path
 - `DEPLOYMENT_PRIVATE_BETA.md`: deployment instructions
 - `PROJECT_LOG.md`: living record of what is done, what is left, and what is next
@@ -136,7 +139,28 @@ This preview is useful for UI review and guided calls. It uses browser-local fal
 
 ## Current Status
 
-The product is ready for private deployment setup and guided beta preparation.
+The original prototype is ready for private deployment setup and guided beta preparation.
+
+The current strategic direction has moved toward a productionized Learning Studio web app. New work should start from:
+
+[TEAM_HANDOFF_START_HERE.md](TEAM_HANDOFF_START_HERE.md)
+
+Then use:
+
+[Learning_Studio_Production_Web_App_Accountable_Tasklist.md](Learning_Studio_Production_Web_App_Accountable_Tasklist.md)
+
+The selected MVP spine is:
+
+- Public Trust Page
+- Structured Inquiry Form
+- WhatsApp Handoff/Template
+- Trial/Demo Workflow
+- Student/Learner Memory
+- Monthly Fee Tracker
+- Owner Action Queue
+- Testimonials/Proof Section
+- Parent/Client FAQ
+- Privacy/Consent Controls
 
 It is not yet ready for broad public launch. Remaining work includes real authentication, reviewed legal documents, formal data deletion workflow, monitoring, backups, staging/production separation, and end-to-end tests.
 
