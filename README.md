@@ -2,6 +2,28 @@
 
 BizzNexx is a persona-first business operating layer for Indian service-led microbusinesses.
 
+## Current Strategic Direction: ContexureEarth Tutor
+
+This repository is now being prepared as the foundation for **ContexureEarth Tutor**.
+
+ContexureEarth Tutor is the education-focused product wedge built from the existing BizzNexx Learning Studio work. The goal is to help tutors and small learning studios move from scattered WhatsApp, memory, and notebooks into one operating rhythm for trust, inquiries, trials, fees, proof, and learner context.
+
+Start here before making product or engineering changes:
+
+[CONTEXUREEARTH_PROJECT_START_HERE.md](CONTEXUREEARTH_PROJECT_START_HERE.md)
+
+The deeper product direction is documented in:
+
+[product vision/README.md](<product vision/README.md>)
+
+In practical terms:
+
+- **BizzNexx** is the existing prototype and operating layer.
+- **Learning Studio** is the current tutor wedge.
+- **ContexureEarth Tutor** is the intended education-native product direction.
+
+Do not treat this repo as a generic CRM, LMS, ERP, or marketplace project.
+
 It helps a small business do four practical things better:
 
 - Look credible when a prospect opens the business page
