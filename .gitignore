@@ -25,6 +25,7 @@ pnpm-debug.log*
 !.env.example
 .DS_Store
 Thumbs.db
+~$*.xlsx
 .idea/
 .vscode/
 

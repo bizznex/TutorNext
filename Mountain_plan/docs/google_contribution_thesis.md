@@ -1,7 +1,7 @@
 # Google contribution thesis — working draft
 
-Status: **hypothesis for insider calibration, not an application claim**  
-Prepared: 2026-07-17  
+Status: **hypothesis for insider calibration, not an application claim**<br>
+Prepared: 2026-07-17<br>
 Decision deadline: Day 10
 
 ## One-sentence contribution
