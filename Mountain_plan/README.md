@@ -2,6 +2,17 @@
 
 This folder turns `Google_90_Day_Bulletproof_Mountain_Plan.xlsx` into a lightweight GitHub accountability system. The workbook remains the source of truth.
 
+## Product repository boundaries
+
+The Mountain Plan is the private orchestration layer. Each product has an independent public repository for its own code, evidence, decisions, tests, issues, and releases:
+
+- [Decision360 CPG](https://github.com/rickdatascientist/decision360-cpg)
+- [Decision Agent Benchmark](https://github.com/rickdatascientist/decision-agent-benchmark)
+- [Transformation Mapper](https://github.com/rickdatascientist/transformation-mapper)
+- [Commerce Growth](https://github.com/rickdatascientist/commerce-growth)
+
+See [`docs/REPOSITORY_MAP.md`](docs/REPOSITORY_MAP.md) for ownership and clean-room rules. Day 1 role calibration starts with [`docs/google_contribution_thesis.md`](docs/google_contribution_thesis.md), [`docs/role_calibration_questions.md`](docs/role_calibration_questions.md), and [`docs/decisions_needed.md`](docs/decisions_needed.md).
+
 ## Daily rhythm
 
 At **9:00 AM India time** every day from **18 July through 15 October 2026**, GitHub Actions creates one issue assigned to the repository owner. The issue contains:
