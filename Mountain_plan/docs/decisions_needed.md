@@ -12,12 +12,14 @@ Updated: 2026-07-17
 | DN-006 | What is excluded by the clean-room rule? | Rick + legal reviewer if needed | Day 12 | No employer/customer material, personal data, confidential interviews, or copied code | Written provenance and exclusion review | Block public product claims or releases |
 | DN-007 | What reuse license should each public repository use? | Rick | Before external code contribution | No license selected; public review only | Licensing intent and any employer/legal constraints | Do not accept external code or imply open-source rights |
 | DN-008 | Should shared contracts be a separate repository/package? | Rick + architect | Day 25 | Undecided; no copying between product repos | Two approved product PRDs and a stable cross-product contract | Keep contracts product-local until ownership is clear |
+| DN-009 | Should the already-public Decision360 repository remain public before the simulation UI is polished? | Rick | Now | Repository and technical prerelease are currently public; later-public wording conflicts with current state | Explicit keep-public or make-private decision, including impact on existing links/release | Do not silently change repository visibility or describe it as private |
 
 ## Immediate Rick actions
 
 1. Select the first Google insider and send or schedule the Day 1 calibration conversation.
 2. Answer DN-006 with an initial list of employers, customers, documents, datasets, and product details that must never enter public repositories.
 3. Decide whether the public repository names should remain descriptive or later sit under a GroundAI organization/brand.
+4. Resolve DN-009: keep the current public repository/release visible, or explicitly authorize a visibility change while UI research continues.
 
 ## Codex actions after Rick input
 
