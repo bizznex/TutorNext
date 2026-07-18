@@ -11,6 +11,8 @@ The Mountain Plan is the private orchestration layer. Each product has an indepe
 - [Transformation Mapper](https://github.com/rickdatascientist/transformation-mapper)
 - [Commerce Growth](https://github.com/rickdatascientist/commerce-growth)
 
+Current implementation and validation status is recorded in [`docs/PORTFOLIO_STATUS.md`](docs/PORTFOLIO_STATUS.md).
+
 See [`docs/REPOSITORY_MAP.md`](docs/REPOSITORY_MAP.md) for ownership and clean-room rules. Day 1 role calibration starts with [`docs/google_contribution_thesis.md`](docs/google_contribution_thesis.md), [`docs/role_calibration_questions.md`](docs/role_calibration_questions.md), and [`docs/decisions_needed.md`](docs/decisions_needed.md).
 
 ## Daily rhythm

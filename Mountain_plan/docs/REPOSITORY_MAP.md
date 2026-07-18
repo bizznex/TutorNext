@@ -2,12 +2,12 @@
 
 The Mountain Plan workbook and daily coach are the private orchestration layer. Product implementation, public evidence, decisions, tests, and releases remain isolated in four public repositories.
 
-| Product | Public repository | Owned scope | 90-day target |
+| Product | Public repository | Owned scope | Current state |
 |---|---|---|---|
-| Decision360 CPG | https://github.com/rickdatascientist/decision360-cpg | Supply-chain decision workflows, deterministic decision logic, governed agent layer, product evaluation | Public beta |
-| Decision Agent Benchmark | https://github.com/rickdatascientist/decision-agent-benchmark | Decision/economic metrics, benchmark tasks, runner, scorecards, findings | Public alpha |
-| Transformation Mapper | https://github.com/rickdatascientist/transformation-mapper | Evidence ingestion, opportunity generation, transparent scoring, no-build decisions | Demonstrable prototype |
-| Commerce Growth | https://github.com/rickdatascientist/commerce-growth | Catalog readiness and category opportunity; strictly non-medical | Vertical demonstration |
+| Decision360 CPG | https://github.com/rickdatascientist/decision360-cpg | Supply-chain decision workflows, deterministic decision logic, governed agent layer, product evaluation | Technical reference beta plus five-workflow simulation UI on `main` |
+| Decision Agent Benchmark | https://github.com/rickdatascientist/decision-agent-benchmark | Decision/economic metrics, benchmark tasks, runner, scorecards, findings | Validated public-alpha metric-conformance suite on `main` |
+| Transformation Mapper | https://github.com/rickdatascientist/transformation-mapper | Evidence ingestion, opportunity generation, transparent scoring, no-build decisions | Validated public-alpha conformance prototype on `main` |
+| Commerce Growth | https://github.com/rickdatascientist/commerce-growth | Catalog readiness and category opportunity; strictly non-medical | Validated public-alpha vertical conformance demo on `main` |
 
 ## Boundary rules
 
@@ -20,4 +20,4 @@ The Mountain Plan workbook and daily coach are the private orchestration layer. 
 
 ## Public release gate
 
-Before any product release, confirm product-specific acceptance tests, evidence, security, privacy, IP/clean-room review, known limitations, and a named human approval decision in that product's repository.
+Before any production or value-claiming release, confirm product-specific acceptance tests, evidence, security, privacy, IP/clean-room review, known limitations, and a named human approval decision in that product's repository. Synthetic conformance alphas must carry an explicit claim boundary and reproducible validation evidence.
