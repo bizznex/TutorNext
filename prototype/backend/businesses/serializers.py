@@ -1,6 +1,11 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.utils import timezone
 
 from .models import (
+    Account,
+    AccountUser,
     Business,
     Catalogue,
     CatalogueItem,
@@ -19,6 +24,8 @@ from .models import (
     Testimonial,
     TrustProof,
 )
+
+User = get_user_model()
 
 
 class CatalogueItemSerializer(serializers.ModelSerializer):
@@ -158,3 +165,228 @@ class PageEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = PageEvent
         fields = "__all__"
+
+
+# User Serializers
+class UserSerializer(serializers.ModelSerializer):
+    """
+    User profile serializer.
+    """
+    
+    class Meta:
+        model = User
+        fields = [
+            'id', 'email', 'first_name', 'last_name', 'phone_number',
+            'whatsapp_number', 'preferred_language', 'avatar',
+            'is_verified', 'last_active_at', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'is_verified', 'last_active_at', 'created_at', 'updated_at']
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    """
+    User registration serializer with password validation.
+    """
+    
+    password = serializers.CharField(write_only=True, required=True)
+    password_confirm = serializers.CharField(write_only=True, required=True)
+    
+    class Meta:
+        model = User
+        fields = [
+            'email', 'first_name', 'last_name', 'phone_number',
+            'password', 'password_confirm', 'preferred_language'
+        ]
+    
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password_confirm']:
+            raise serializers.ValidationError({"password_confirm": "Passwords do not match."})
+        
+        try:
+            validate_password(attrs['password'])
+        except Exception as e:
+            raise serializers.ValidationError({"password": str(e)})
+        
+        return attrs
+    
+    def create(self, validated_data):
+        validated_data.pop('password_confirm')
+        user = User.objects.create_user(
+            email=validated_data['email'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            phone_number=validated_data.get('phone_number', ''),
+            preferred_language=validated_data.get('preferred_language', 'en'),
+            password=validated_data['password']
+        )
+        return user
+
+
+class UserLoginSerializer(serializers.Serializer):
+    """
+    User login serializer.
+    """
+    
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    
+    def validate(self, attrs):
+        from django.contrib.auth import authenticate
+        
+        user = authenticate(
+            username=attrs['email'],
+            password=attrs['password']
+        )
+        
+        if not user:
+            raise serializers.ValidationError(
+                {"email": "Invalid email or password."}
+            )
+        
+        if not user.is_active:
+            raise serializers.ValidationError(
+                {"email": "Account is disabled."}
+            )
+        
+        attrs['user'] = user
+        return attrs
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    """
+    Password reset serializer.
+    """
+    
+    email = serializers.EmailField()
+    
+    def validate_email(self, value):
+        User = get_user_model()
+        
+        if not User.objects.filter(email=value).exists():
+            return value
+        
+        return value
+
+
+# Account Serializers
+class AccountSerializer(serializers.ModelSerializer):
+    """
+    Account serializer.
+    """
+    
+    class Meta:
+        model = Account
+        fields = [
+            'id', 'name', 'slug', 'plan', 'status',
+            'max_businesses', 'max_users',
+            'subscription_start', 'subscription_end',
+            'billing_email', 'billing_phone',
+            'address', 'city', 'state', 'pincode', 'country',
+            'gst_number', 'created_at', 'updated_at'
+        ]
+        read_only_fields = [
+            'id', 'slug', 'created_at', 'updated_at',
+            'max_businesses', 'max_users'
+        ]
+
+
+class AccountCreateSerializer(serializers.ModelSerializer):
+    """
+    Account creation serializer.
+    """
+    
+    class Meta:
+        model = Account
+        fields = [
+            'name', 'plan', 'billing_email', 'billing_phone',
+            'address', 'city', 'state', 'pincode', 'country', 'gst_number'
+        ]
+    
+    def create(self, validated_data):
+        user = self.context['user']
+        
+        account = Account.objects.create(
+            **validated_data,
+            created_by=user
+        )
+        
+        AccountUser.objects.create(
+            user=user,
+            account=account,
+            role=AccountUser.Role.OWNER,
+            invited_by=user
+        )
+        
+        return account
+
+
+class AccountUserSerializer(serializers.ModelSerializer):
+    """
+    Account user serializer.
+    """
+    
+    user = UserSerializer(read_only=True)
+    
+    class Meta:
+        model = AccountUser
+        fields = [
+            'id', 'user', 'account', 'role',
+            'is_active', 'invited_by', 'invited_at',
+            'joined_at', 'last_active_at', 'created_at'
+        ]
+        read_only_fields = [
+            'id', 'user', 'account', 'invited_at',
+            'joined_at', 'last_active_at', 'created_at'
+        ]
+
+
+class InvitationSerializer(serializers.Serializer):
+    """
+    User invitation serializer.
+    """
+    
+    email = serializers.EmailField()
+    role = serializers.ChoiceField(choices=AccountUser.Role.choices)
+    
+    def validate_email(self, value):
+        User = get_user_model()
+        
+        user = User.objects.filter(email=value).first()
+        if user:
+            account = self.context['account']
+            if AccountUser.objects.filter(user=user, account=account).exists():
+                raise serializers.ValidationError(
+                    "User already has access to this account."
+                )
+        
+        return value
+    
+    def create(self, validated_data):
+        User = get_user_model()
+        
+        account = self.context['account']
+        request = self.context['request']
+        
+        email = validated_data['email']
+        role = validated_data['role']
+        
+        user = User.objects.filter(email=email).first()
+        
+        if user:
+            account_user = AccountUser.objects.create(
+                user=user,
+                account=account,
+                role=role,
+                invited_by=request.user,
+                joined_at=timezone.now()
+            )
+            return account_user
+        else:
+            account_user = AccountUser.objects.create(
+                user=None,
+                account=account,
+                role=role,
+                invited_by=request.user,
+                is_active=False
+            )
+            return account_user

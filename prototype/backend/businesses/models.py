@@ -1,4 +1,331 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+
+class User(AbstractUser):
+    """
+    Custom user model extending Django's AbstractUser.
+    
+    This replaces the default User model and adds tutor-specific fields.
+    """
+    
+    username = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+        help_text="Optional username"
+    )
+    
+    email = models.EmailField(
+        unique=True,
+        help_text="Primary identifier for login"
+    )
+    
+    phone_number = models.CharField(
+        max_length=32,
+        blank=True,
+        null=True,
+        help_text="User's phone number for notifications"
+    )
+    
+    preferred_language = models.CharField(
+        max_length=40,
+        default="en",
+        choices=[
+            ("en", "English"),
+            ("hi", "Hindi"),
+            ("hinglish", "Hinglish"),
+            ("bn", "Bengali"),
+        ],
+        help_text="Preferred language for UI and messages"
+    )
+    
+    whatsapp_number = models.CharField(
+        max_length=32,
+        blank=True,
+        null=True,
+        help_text="WhatsApp number for business notifications"
+    )
+    
+    avatar = models.ImageField(
+        upload_to="avatars/",
+        blank=True,
+        null=True,
+        help_text="User profile picture"
+    )
+    
+    is_verified = models.BooleanField(
+        default=False,
+        help_text="Email/phone verified"
+    )
+    
+    last_active_at = models.DateTimeField(
+        auto_now=True,
+        help_text="Last activity timestamp"
+    )
+    
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="User creation timestamp"
+    )
+    
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        help_text="Last update timestamp"
+    )
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
+    
+    def __str__(self):
+        return f"{self.get_full_name()} ({self.email})"
+    
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}".strip()
+    
+    def get_short_name(self):
+        return self.first_name or self.email.split('@')[0]
+
+
+class Account(models.Model):
+    """
+    Represents a billing/subscription unit.
+    
+    An account can have multiple businesses and multiple users.
+    """
+    
+    class PlanType(models.TextChoices):
+        FREE = "free", "Free"
+        STARTER = "starter", "Starter"
+        PRO = "pro", "Pro"
+        ENTERPRISE = "enterprise", "Enterprise"
+    
+    class Status(models.TextChoices):
+        ACTIVE = "active", "Active"
+        SUSPENDED = "suspended", "Suspended"
+        CANCELLED = "cancelled", "Cancelled"
+    
+    name = models.CharField(
+        max_length=120,
+        help_text="Account name (e.g., 'Ananya's Tutoring Business')"
+    )
+    
+    slug = models.SlugField(
+        unique=True,
+        help_text="URL-friendly account identifier"
+    )
+    
+    plan = models.CharField(
+        max_length=20,
+        choices=PlanType.choices,
+        default=PlanType.FREE,
+        help_text="Subscription plan"
+    )
+    
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.ACTIVE,
+        help_text="Account status"
+    )
+    
+    max_businesses = models.PositiveSmallIntegerField(
+        default=1,
+        help_text="Maximum number of businesses allowed"
+    )
+    
+    max_users = models.PositiveSmallIntegerField(
+        default=1,
+        help_text="Maximum number of users allowed"
+    )
+    
+    subscription_start = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Subscription start date"
+    )
+    
+    subscription_end = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Subscription end date"
+    )
+    
+    billing_email = models.EmailField(
+        help_text="Email for billing communications"
+    )
+    
+    billing_phone = models.CharField(
+        max_length=32,
+        blank=True,
+        null=True,
+        help_text="Phone for billing communications"
+    )
+    
+    address = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Billing address"
+    )
+    
+    city = models.CharField(
+        max_length=80,
+        blank=True,
+        null=True,
+        help_text="City for billing"
+    )
+    
+    state = models.CharField(
+        max_length=80,
+        blank=True,
+        null=True,
+        help_text="State for billing"
+    )
+    
+    pincode = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        help_text="Pincode for billing"
+    )
+    
+    country = models.CharField(
+        max_length=80,
+        default="India",
+        help_text="Country for billing"
+    )
+    
+    gst_number = models.CharField(
+        max_length=40,
+        blank=True,
+        null=True,
+        help_text="GST registration number"
+    )
+    
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="created_accounts",
+        help_text="User who created this account"
+    )
+    
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="Account creation timestamp"
+    )
+    
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        help_text="Last update timestamp"
+    )
+    
+    def __str__(self):
+        return f"{self.name} ({self.slug})"
+    
+    def is_active(self):
+        return self.status == self.Status.ACTIVE
+    
+    def can_add_business(self):
+        return self.businesses.count() < self.max_businesses
+    
+    def can_add_user(self):
+        return self.users.count() < self.max_users
+
+
+class AccountUser(models.Model):
+    """
+    Maps users to accounts with role-based permissions.
+    
+    This is a through model for the User-Account many-to-many relationship.
+    """
+    
+    class Role(models.TextChoices):
+        OWNER = "owner", "Owner"
+        ADMIN = "admin", "Admin"
+        MANAGER = "manager", "Manager"
+        OPERATOR = "operator", "Operator"
+        VIEWER = "viewer", "Viewer"
+    
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="account_memberships",
+        help_text="The user"
+    )
+    
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        related_name="users",
+        help_text="The account"
+    )
+    
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.VIEWER,
+        help_text="User's role in this account"
+    )
+    
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Whether this membership is active"
+    )
+    
+    invited_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="invited_users",
+        help_text="User who invited this user"
+    )
+    
+    invited_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="Invitation timestamp"
+    )
+    
+    joined_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When user accepted invitation"
+    )
+    
+    last_active_at = models.DateTimeField(
+        auto_now=True,
+        help_text="Last activity in this account"
+    )
+    
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="Membership creation timestamp"
+    )
+    
+    class Meta:
+        unique_together = [['user', 'account']]
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.email} ({self.get_role_display()}) @ {self.account.name}"
+    
+    def is_owner(self):
+        return self.role == self.Role.OWNER
+    
+    def is_admin(self):
+        return self.role in [self.Role.OWNER, self.Role.ADMIN]
+    
+    def can_manage_users(self):
+        return self.is_admin()
+    
+    def can_manage_businesses(self):
+        return self.role in [self.Role.OWNER, self.Role.ADMIN, self.Role.MANAGER]
+    
+    def can_view_data(self):
+        return self.is_active
+    
+    def can_edit_data(self):
+        return self.is_active and self.role in [self.Role.OWNER, self.Role.ADMIN, self.Role.MANAGER]
 
 
 class Business(models.Model):
@@ -10,6 +337,27 @@ class Business(models.Model):
         CREATOR = "creator", "Creator"
         HOME_SERVICE = "home_service", "Home Service"
 
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        related_name="businesses",
+        help_text="Account this business belongs to"
+    )
+    
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="created_businesses",
+        help_text="User who created this business"
+    )
+    
+    assigned_users = models.ManyToManyField(
+        User,
+        related_name="assigned_businesses",
+        blank=True,
+        help_text="Users with access to this business"
+    )
+    
     name = models.CharField(max_length=160)
     owner_name = models.CharField(max_length=120)
     persona_pack = models.CharField(max_length=40, choices=PersonaPack.choices)
@@ -23,9 +371,26 @@ class Business(models.Model):
     health_score = models.PositiveSmallIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    is_public = models.BooleanField(
+        default=False,
+        help_text="Whether this business page is publicly accessible"
+    )
+    
+    custom_domain = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Custom domain for this business (e.g., ananya.bizznexx.com)"
+    )
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.account.slug})"
+    
+    def get_absolute_url(self):
+        if self.custom_domain:
+            return f"https://{self.custom_domain}"
+        return f"https://app.bizznexx.com/b/{self.public_slug}"
 
 
 class SetupProject(models.Model):

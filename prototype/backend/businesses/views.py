@@ -2,8 +2,14 @@ from django.db.models import Sum
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from .models import (
+    Account,
+    AccountUser,
     Business,
     FollowUpTask,
     Inquiry,
@@ -15,16 +21,26 @@ from .models import (
 )
 from .personas import PERSONA_PACKS, fill_template
 from .serializers import (
+    AccountSerializer,
+    AccountUserSerializer,
+    AccountCreateSerializer,
     BusinessSerializer,
     FollowUpTaskSerializer,
     InquirySerializer,
+    InvitationSerializer,
     LeadSerializer,
     MessageTemplateSerializer,
     PageEventSerializer,
+    PasswordResetSerializer,
     PaymentSerializer,
     PublicInquirySerializer,
     SetupProjectSerializer,
+    UserLoginSerializer,
+    UserRegistrationSerializer,
+    UserSerializer,
 )
+
+User = get_user_model()
 
 
 class BusinessViewSet(viewsets.ModelViewSet):
@@ -175,3 +191,168 @@ class SetupProjectViewSet(viewsets.ModelViewSet):
 class PageEventViewSet(viewsets.ModelViewSet):
     queryset = PageEvent.objects.all().select_related("business", "catalogue_item")
     serializer_class = PageEventSerializer
+
+
+# ============================================================================
+# Auth Views - ContexureEarth Tutor
+# ============================================================================
+
+class UserRegistrationView(viewsets.GenericViewSet):
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [AllowAny]
+    
+    @action(detail=False, methods=['post'])
+    def register(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        user = serializer.save()
+        
+        account = Account.objects.create(
+            name=f"{user.get_full_name()}'s Tutor Studio",
+            slug=user.email.split('@')[0],
+            billing_email=user.email,
+            created_by=user
+        )
+        
+        AccountUser.objects.create(
+            user=user,
+            account=account,
+            role=AccountUser.Role.OWNER,
+            invited_by=user
+        )
+        
+        return Response({
+            'user': UserSerializer(user).data,
+            'account': account.slug,
+            'message': 'Registration successful. Please login to ContexureEarth Tutor.'
+        }, status=status.HTTP_201_CREATED)
+
+
+class UserLoginView(TokenObtainPairView):
+    serializer_class = UserLoginSerializer
+    permission_classes = [AllowAny]
+
+
+class UserLogoutView(viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @action(detail=False, methods=['post'])
+    def logout(self, request):
+        from rest_framework_simplejwt.tokens import RefreshToken
+        
+        try:
+            refresh_token = request.data.get('refresh_token')
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message': 'Successfully logged out.'})
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+class UserProfileView(viewsets.GenericViewSet):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        return self.request.user
+    
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
+    
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class PasswordResetView(viewsets.GenericViewSet):
+    serializer_class = PasswordResetSerializer
+    permission_classes = [AllowAny]
+    
+    @action(detail=False, methods=['post'])
+    def request_reset(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({
+            'message': 'Password reset link sent to your email.'
+        })
+
+
+# ============================================================================
+# Account Views - ContexureEarth Tutor
+# ============================================================================
+
+class AccountViewSet(viewsets.ModelViewSet):
+    serializer_class = AccountSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return Account.objects.filter(
+            users__user=self.request.user,
+            users__is_active=True
+        ).distinct()
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
+    
+    def create(self, request, *args, **kwargs):
+        serializer = AccountCreateSerializer(
+            data=request.data,
+            context=self.get_serializer_context()
+        )
+        serializer.is_valid(raise_exception=True)
+        account = serializer.save()
+        
+        return Response(
+            self.get_serializer(account).data,
+            status=status.HTTP_201_CREATED
+        )
+    
+    @action(detail=True, methods=['post'])
+    def invite_user(self, request, pk=None):
+        account = self.get_object()
+        serializer = InvitationSerializer(
+            data=request.data,
+            context={'account': account, 'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        account_user = serializer.save()
+        
+        return Response(
+            AccountUserSerializer(account_user).data,
+            status=status.HTTP_201_CREATED
+        )
+    
+    @action(detail=True, methods=['get'])
+    def users(self, request, pk=None):
+        account = self.get_object()
+        users = AccountUser.objects.filter(
+            account=account,
+            is_active=True
+        )
+        serializer = AccountUserSerializer(users, many=True)
+        return Response(serializer.data)
+
+
+class AccountUserViewSet(viewsets.ModelViewSet):
+    serializer_class = AccountUserSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        business_id = self.kwargs.get('business_pk')
+        if business_id:
+            business = Business.objects.get(pk=business_id)
+            return AccountUser.objects.filter(
+                account=business.account
+            )
+        return AccountUser.objects.none()
